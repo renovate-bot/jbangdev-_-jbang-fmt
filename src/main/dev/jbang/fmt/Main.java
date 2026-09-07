@@ -1,7 +1,7 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 //JAVA 21+
 //DEPS org.eclipse.jdt:org.eclipse.jdt.core:3.47.0
-//DEPS org.eclipse.platform:org.eclipse.jface.text:3.28.0
+//DEPS org.eclipse.platform:org.eclipse.jface.text:3.31.100
 //DEPS info.picocli:picocli:4.7.7
 
 //JAVAC_OPTIONS -proc:full -Averbose=true
