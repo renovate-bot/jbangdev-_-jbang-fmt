@@ -11,6 +11,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import javax.swing.RowFilter;
 
+import dev.jbang.fmt.FmtLogger;
+
 /**
  * Panel for managing Eclipse formatter settings organized in logical groups.
  */
