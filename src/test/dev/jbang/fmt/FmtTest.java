@@ -1,28 +1,24 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
-//DEPS org.junit.jupiter:junit-jupiter-engine:5.12.2
-//DEPS org.junit.jupiter:junit-jupiter-params:5.12.2
-//DEPS org.junit.platform:junit-platform-console:1.12.2
+//DEPS org.junit.jupiter:junit-jupiter-engine:5.14.4
+//DEPS org.junit.jupiter:junit-jupiter-params:5.14.4
+//DEPS org.junit.platform:junit-platform-console:1.14.4
 //DEPS org.assertj:assertj-core:3.25.1
 
-//SOURCES ../../../../src/**/*.java
+//SOURCES ../../../../main/**/*.java
 
 package dev.jbang.fmt;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.console.ConsoleLauncher;
+import org.assertj.core.api.Assertions;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.platform.console.ConsoleLauncher;
-
-import dev.jbang.fmt.JavaFormatter;
-
 // JUnit5 Test class for fmt
-public class testFmt {
+public class FmtTest {
 
 	private static Stream<JavaFormatter> formatters() {
 		return Stream.of(new JavaFormatter("test", null, true));
@@ -38,7 +34,7 @@ public class testFmt {
 		String result = formatter.format(input);
 
 		// Verify it's not the same as input (unless input was already formatted)
-		assertThat(result.trim()).as("Formatter %s should change unformatted code", formatter.getName())
+		Assertions.assertThat(result.trim()).as("Formatter %s should change unformatted code", formatter.getName())
 			.isNotEqualTo(input.trim());
 	}
 
@@ -49,9 +45,9 @@ public class testFmt {
 		String emptyInput = "";
 
 		// Both formatters should handle empty input gracefully
-		assertThatCode(() -> {
+		Assertions.assertThatCode(() -> {
 			String result = formatter.format(emptyInput);
-			assertThat(result.trim()).as("Formatter %s should handle empty input gracefully", formatter.getName())
+			Assertions.assertThat(result.trim()).as("Formatter %s should handle empty input gracefully", formatter.getName())
 				.isEqualTo(emptyInput); //trim needed as google does add a newline
 		}).doesNotThrowAnyException();
 	}
@@ -62,9 +58,9 @@ public class testFmt {
 		String invalidCode = "this is not valid java code {";
 
 		// Both formatters should handle invalid code gracefully
-		assertThatCode(() -> {
+		Assertions.assertThatCode(() -> {
 			String result = formatter.format(invalidCode);
-			assertThat(result).as("Formatter %s should handle invalid Java code gracefully", formatter.getName())
+			Assertions.assertThat(result).as("Formatter %s should handle invalid Java code gracefully", formatter.getName())
 				.isEqualTo(invalidCode);
 		}).doesNotThrowAnyException();
 	}
@@ -86,18 +82,18 @@ public class testFmt {
 
 		//verify that the result is still a valid jbang directive
 		// Note: Google formatter may add spaces after //, so we check for the core shebang
-		assertThat(result.lines().findFirst().orElse(""))
+		Assertions.assertThat(result.lines().findFirst().orElse(""))
 			.as("Formatter %s should preserve JBang shebang directive", formatter.getName())
 			.contains("///usr/bin/env jbang \"$0\" \"$@\" ; exit $?");
 
-		assertThat(result).as("Formatter %s should preserve DEPS directives", formatter.getName())
+		Assertions.assertThat(result).as("Formatter %s should preserve DEPS directives", formatter.getName())
 			.contains("//DEPS org.junit.jupiter:junit-jupiter-engine:5.12.2")
 			.contains("//DEPS org.junit.jupiter:junit-jupiter-params:5.12.2")
 			.contains("//DEPS org.junit.platform:junit-platform-console:1.12.2")
 			.contains("//DEPS org.assertj:assertj-core:3.25.1");
 
 		// Verify Java code is formatted (should not be the same as input)
-		assertThat(result).as("Formatter %s should format Java code", formatter.getName())
+		Assertions.assertThat(result).as("Formatter %s should format Java code", formatter.getName())
 			.isNotEqualTo(input)
 			.contains("public class TestClass {");
 	}
@@ -105,7 +101,7 @@ public class testFmt {
 	@ParameterizedTest
 	@MethodSource("formatters")
 	public void testFormatterNames(JavaFormatter formatter) throws Exception {
-		assertThat(formatter.getName()).as("Formatter should have a non-null name")
+		Assertions.assertThat(formatter.getName()).as("Formatter should have a non-null name")
 			.isNotNull()
 			.isIn("Eclipse",
 					"Google");
@@ -120,7 +116,7 @@ public class testFmt {
 
 		String result = formatter.format(input);
 
-		assertThat(result).as("Formatter %s should format complex Java code", formatter.getName())
+		Assertions.assertThat(result).as("Formatter %s should format complex Java code", formatter.getName())
 			.isNotEqualTo(input)
 			.contains("public class ComplexTest")
 			.contains("private String name")
@@ -138,7 +134,7 @@ public class testFmt {
 
 		String result = formatter.format(input);
 
-		assertThat(result).as("Formatter %s should handle nested structures", formatter.getName())
+		Assertions.assertThat(result).as("Formatter %s should handle nested structures", formatter.getName())
 			.isNotEqualTo(input)
 			.contains("public class NestedTest")
 			.contains("if (true)")

@@ -1,37 +1,35 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
-//DEPS org.junit.jupiter:junit-jupiter-engine:5.12.2
-//DEPS org.junit.jupiter:junit-jupiter-params:5.12.2
-//DEPS org.junit.platform:junit-platform-console:1.12.2
+//DEPS org.junit.jupiter:junit-jupiter-engine:5.14.4
+//DEPS org.junit.jupiter:junit-jupiter-params:5.14.4
+//DEPS org.junit.platform:junit-platform-console-standalone:1.14.4
 //DEPS org.assertj:assertj-core:3.25.1
 
-//SOURCES Main.java
+//SOURCES ../../../../main/**/*.java
 
 package dev.jbang.fmt;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.console.ConsoleLauncher;
+import org.assertj.core.api.Assertions;
 
-import java.beans.Transient;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.junit.platform.console.ConsoleLauncher;
-
-import dev.jbang.fmt.CodeRange;
+import static org.assertj.core.api.Assertions.assertThat;
 
 // JUnit5 Test class for fmt
-public class testRange {
+public class RangeTest {
 
 	@Test
 	public void testDirectives() throws Exception {
 
 		assertThat(CodeRange.isJBangDirective("//DEPS org.junit.jupiter:junit-jupiter-engine:5.12.2"))
 			.isTrue();
-		assertThat(CodeRange.isJBangDirective("//JAVA 21+")).isTrue();
-		assertThat(CodeRange.isJBangDirective("//DEPS org.junit.jupiter:junit-jupiter-engine:5.12.2"))
+		Assertions.assertThat(CodeRange.isJBangDirective("//JAVA 21+")).isTrue();
+		Assertions.assertThat(CodeRange.isJBangDirective("//DEPS org.junit.jupiter:junit-jupiter-engine:5.12.2"))
 			.isTrue();
-		assertThat(CodeRange.isJBangDirective("// DEPS")).isFalse();
+		Assertions.assertThat(CodeRange.isJBangDirective("// DEPS")).isFalse();
 
 	}
 
@@ -45,10 +43,10 @@ public class testRange {
 
 		List<CodeRange> ranges = CodeRange.identifyJavaRanges(alljava);
 
-		assertThat(ranges).hasSize(1);
+		Assertions.assertThat(ranges).hasSize(1);
 
-		assertThat(ranges.get(0).start()).isEqualTo(0);
-		assertThat(ranges.get(0).end()).isEqualTo(alljava.length());
+		Assertions.assertThat(ranges.get(0).start()).isEqualTo(0);
+		Assertions.assertThat(ranges.get(0).end()).isEqualTo(alljava.length());
 	}
 
 	@Test
@@ -60,10 +58,10 @@ public class testRange {
 						""";
 
 		List<CodeRange> ranges = CodeRange.identifyJavaRanges(transientCode);
-		assertThat(ranges).hasSize(1);
+		Assertions.assertThat(ranges).hasSize(1);
 
-		assertThat(ranges.get(0).start()).isEqualTo(0);
-		assertThat(ranges.get(0).end()).isEqualTo(transientCode.length());
+		Assertions.assertThat(ranges.get(0).start()).isEqualTo(0);
+		Assertions.assertThat(ranges.get(0).end()).isEqualTo(transientCode.length());
 	}
 
 	@Test
@@ -75,7 +73,7 @@ public class testRange {
 
 		List<CodeRange> ranges = CodeRange.identifyJavaRanges(pureJBang);
 
-		assertThat(ranges).hasSize(0);
+		Assertions.assertThat(ranges).hasSize(0);
 	}
 
 	@Test
@@ -91,10 +89,10 @@ public class testRange {
 
 		List<CodeRange> ranges = CodeRange.identifyJavaRanges(alljava);
 
-		assertThat(ranges).hasSize(1);
+		Assertions.assertThat(ranges).hasSize(1);
 
-		assertThat(ranges.get(0).start()).isEqualTo(alljava.indexOf("public"));
-		assertThat(ranges.get(0).end()).isEqualTo(alljava.length());
+		Assertions.assertThat(ranges.get(0).start()).isEqualTo(alljava.indexOf("public"));
+		Assertions.assertThat(ranges.get(0).end()).isEqualTo(alljava.length());
 
 	}
 
